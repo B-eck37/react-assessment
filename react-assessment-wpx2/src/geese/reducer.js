@@ -1,7 +1,10 @@
 const initalState = {
-    todo: {},
-    details: {},
-    completed: false,
+    todo: {
+        task: '',
+        details: '',
+        completed: false,
+    },
+    fullList: [],
 }
 
 const ADDTOLIST = 'ADDTOLIST';
