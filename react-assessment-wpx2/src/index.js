@@ -1,8 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import {Provider} from 'react-redux';
+import { createStore, applyMiddleware } from 'redux';
+import ReduxPromise from 'redux-promise';
+import {HashRouter as HR} from 'react-router-dom';
 import App from './App';
-import registerServiceWorker from './registerServiceWorker';
+import reducers from './reducers/reducer_index';
 
-ReactDOM.render(<App />, document.getElementById('root'));
-registerServiceWorker();
+const createStoreWithMiddleware = applyMiddleware(ReduxPromise)(createStore);
+
+ReactDOM.render(
+    <HR>
+    <Provider store={createStoreWithMiddleware(reducers)}>
+    <App />
+    </Provider>
+    </HR>
+, document.getElementById('root'));
+// registerServiceWorker();
