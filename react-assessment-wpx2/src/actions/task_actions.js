@@ -4,6 +4,7 @@ export const GETLIST = 'GETLIST';
 export const NEWTASK = 'NEWTASK';
 export const DELETETASK = 'DELETETASK';
 export const EDITTASK = 'EDITTASK';
+export const COMPLETED = 'COMPLETED';
 
 
 export function getTasks(){
@@ -39,5 +40,13 @@ export function taskEdited(id, body){
     return {
         type: EDITTASK,
         payload: edited
+    }
+}
+export function toggleComplete(id){
+    console.log(id)
+    var complete = axios.put(`https://practiceapi.devmountain.com/api/tasks/${id}`)
+    return {
+        type: COMPLETED,
+        payload: complete
     }
 }

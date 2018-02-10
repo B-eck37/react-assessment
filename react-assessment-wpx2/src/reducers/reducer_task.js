@@ -1,9 +1,5 @@
-import { GETLIST, NEWTASK, DELETETASK, EDITTASK } from '../actions/task_actions';
+import { GETLIST, NEWTASK, DELETETASK, EDITTASK, COMPLETED } from '../actions/task_actions';
 
-// const initialState = {
-//     fullList: [],
-//     task: {},
-// }
 
 export default function(state=[], action) {
     console.log('Action Received', action)
@@ -11,13 +7,15 @@ export default function(state=[], action) {
     switch (action.type){
             case GETLIST:
             console.log('Action Received', action.payload)
-            return {fullList: action.payload.data, ...state}
+            return [...state, action.payload.data]
             case NEWTASK:
-            return {fullList: action.payload, ...state}
+            return [action.payload.data, ...state]
             case DELETETASK:
-            return {fullList: action.payload, ...state}
+            return [action.payload.data, ...state]
             case EDITTASK:
-            return {fullList: action.payload}
+            return [action.payload.data, ...state]
+            case COMPLETED:
+            return [action.payload.data, ...state]
             default:
             return state;
         }

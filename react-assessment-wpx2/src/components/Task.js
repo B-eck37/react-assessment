@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { getTasks, newTask, deleteTask } from "../actions/task_actions";
+import { getTasks, newTask, deleteTask, toggleComplete } from "../actions/task_actions";
 import MdClose from "react-icons/lib/md/close";
 import { Link } from "react-router-dom";
 
@@ -12,19 +12,18 @@ class Task extends Component {
       title: "",
       tasks: []
     };
-    this.startTask = this.startTask.bind(this);
-    // this.seeDetails = this.seeDetails.bind(this);
     this.addTask = this.addTask.bind(this);
     this.deleted = this.deleted.bind(this);
+    this.toggled = this.toggled.bind(this);
   }
 
   componentDidMount() {
     this.props.getTasks();
     setTimeout(() => {
       this.setState({
-        tasks: this.props.fullList.fullList
+        tasks: this.props.fullList[0]
       });
-      console.log(this.props)
+      console.log(this.props, 'HEY')
     }, 500);
   }
 
@@ -35,8 +34,8 @@ class Task extends Component {
     })
     setTimeout(() => {
         this.props.getTasks()
-        this.setState({
-            tasks: this.props.fullList.fullList,
+        return this.setState({
+            tasks: this.props.fullList[0],
         })
     }, 500)
   }
@@ -56,26 +55,24 @@ class Task extends Component {
       setTimeout(() => {
         this.props.getTasks()
         this.setState({
-            tasks: this.props.fullList.fullList,
+            tasks: this.props.fullList[0],
         })
     }, 1000)
   }
 
-
-  startTask() {
-    this.props.addTask({
-      title: this.state.taskName
-    });
+  toggled(id){
+      console.log('hello')
+      this.props.toggleComplete(id)
+      setTimeout(() => {
+          this.props.getTasks()
+          this.setState({
+              tasks: this.props.fullList[0]
+          })
+      }, 200)
   }
 
+
   render() {
-    // const {tasks} = this.state;
-    // const task = tasks.map(todo => {
-    //     for(var i = 0; i <todo.length; i++){
-    //         console.log(todo[i]);
-    //         todo[i]
-    //     }
-    // })
     return (
       <div style={taskPage}>
         <div style={topTask}>
@@ -95,6 +92,7 @@ class Task extends Component {
               ? this.state.tasks.map(task => {
                   
                   return (
+                    //   {task.completed ? <div style={tasksComplete}> </div> : }
                     <div style={tasks} key={task.id} onClick={this.seeDetails}>
                       {task.title}
                       <Link to={`/details/${task.id}`} style={link}>
@@ -102,12 +100,12 @@ class Task extends Component {
                       </Link>
                       {task.completed ? 
                       <button style={btn}>Completed</button> :
-                      <button style={btn}>Incomplete</button> }
+                      <button onClick={() => this.toggled(task.id)} style={btn}>Incomplete</button> }
                       <button style={x} onClick={() => this.deleted(task.id)}><MdClose /></button>
                     </div>
                   );
                 })
-              : this.props.fullList.fullList.map(task => {
+              : this.props.fullList.map(task => {
                 return (
                     <div style={tasks} key={task.id} onClick={this.seeDetails}>
                       {task.title}
@@ -116,7 +114,7 @@ class Task extends Component {
                       </Link>
                       {task.completed ? 
                       <button style={btn}>Completed</button> :
-                      <button style={btn}>Incomplete</button> }
+                      <button onClick={() => this.toggled(task.id)} style={btn}>Incomplete</button> }
                       <button style={x} onClick={() => this.deleted(task.id)}><MdClose /></button>
                     </div>
                   );
@@ -135,7 +133,7 @@ function mapStateToProps({ fullList }) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ getTasks, newTask, deleteTask }, dispatch);
+  return bindActionCreators({ getTasks, newTask, deleteTask, toggleComplete }, dispatch);
 }
 
 const taskPage = {
@@ -151,7 +149,6 @@ const topTask = {
   display: "flex",
   flexDirection: "column",
   justifyContent: "center"
-  // backgroundColor: 'blue',
 };
 
 const addNew = {
@@ -208,4 +205,3 @@ const btn = {
     width: '100px',
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Task);
-// export default Task;

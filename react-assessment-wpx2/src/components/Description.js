@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import {Link} from 'react-router-dom'
 import {connect} from 'react-redux'
-import {taskEdited} from '../actions/task_actions'
+import {taskEdited, getTasks, deleteTask} from '../actions/task_actions'
 import { bindActionCreators } from '../../../../../../Library/Caches/typescript/2.6/node_modules/redux';
 
 
@@ -9,6 +9,7 @@ class Description extends Component {
     constructor(props) {
         super(props)
         this.state = {
+            tasks: [],
             string: '< Back to Tasks',
             title: '',
             description: '',
@@ -18,27 +19,37 @@ class Description extends Component {
         this.updateTitle = this.updateTitle.bind(this)
         this.completed = this.completed.bind(this)
         this.updateList = this.updateList.bind(this)
+        this.backHome = this.backHome.bind(this)
     }
 
     componentDidMount() {
         console.log(this.props)
-        this.props.fullList.fullList.map(elem => {
-            console.log(elem.id, parseInt(this.props.match.params.id), 'Hello')
-            if(elem.id === parseInt(this.props.match.params.id)){
-                console.log(elem, 'inside')
-                return this.setState({
+        this.props.getTasks();
+        setTimeout(() => {
+            this.setState({
+              tasks: this.props.fullList[0]
+            });
+            console.log(this.props, this.state.tasks,'HEY')
+            this.state.tasks.map(elem =>{
+                if(elem.id === parseInt(this.props.match.params.id)){
+                    return this.setState({
                         title: elem.title,
                         description: elem.description,
-                        completed: elem.completed
+                        completed: elem.completed,
                     })
-      }})
-    }
+                }})
+            }, 500)
+}
 
     updateTitle(value){
         this.setState({
             title: value
         })
         console.log(this.state)
+    }
+
+    backHome(){
+        this.props.history.push('/');
     }
 
 
@@ -73,6 +84,17 @@ class Description extends Component {
         this.props.history.push('/')
     }
 
+    deleted(id){
+        this.props.deleteTask(id)
+        setTimeout(() => {
+          this.props.getTasks()
+          this.setState({
+              tasks: this.props.fullList[0],
+          })
+      }, 1000)
+      this.props.history.push('/')
+    }
+
     render() {
         return (
             <div style={description}>
@@ -91,8 +113,8 @@ class Description extends Component {
                     </div>
                     <div style={buttons}>
                         <button onClick={this.updateList}>Save</button>
-                        <button>Cancel</button>
-                        <button>Delete</button>
+                        <button onClick={this.backHome}>Cancel</button>
+                        <button onClick={() => this.deleted(this.props.match.params.id)}>Delete</button>
                     </div>
                 </div> : null}
             </div>
@@ -147,7 +169,7 @@ function mapStateToProps({ fullList }){
 }
 
 function mapDispatchToProps(dispatch){
-    return bindActionCreators({taskEdited}, dispatch)
+    return bindActionCreators({taskEdited, getTasks, deleteTask}, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Description);
