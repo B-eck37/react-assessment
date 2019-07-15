@@ -177,9 +177,9 @@ react-router@^4.2.0:
     prop-types "^15.5.4"
     warning "^3.0.0"
 
-redux-promise-middleware@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/redux-promise-middleware/-/redux-promise-middleware-5.0.0.tgz#1656b24f9ac962bf11fbe55ea8360810e18d47a7"
+redux-promise-middleware@^6.1.1:
+  version "6.1.1"
+  resolved "https://registry.yarnpkg.com/redux-promise-middleware/-/redux-promise-middleware-6.1.1.tgz#0c26358712c2d5be3698faf7aaf53e7a7dc888dd"
 
 redux@^3.7.2:
   version "3.7.2"
